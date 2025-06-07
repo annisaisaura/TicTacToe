@@ -35,7 +35,7 @@ public class Board {
     
     /*
     setting board pada baris dan kolom yang telah ditentukan
-    dengan nilai 1 atau -1 sesuai dengan giliran/ turn
+    dengan nilai 1 atau -1 sesuai dengan giliran/turn
     */
     public boolean setBoard(int brs, int kol) {
         if(this.data[brs][kol]==0) {
@@ -106,6 +106,73 @@ public class Board {
         for(int i=0; i<3; i++)
             for(int j=0; j<3; j++)
                 this.data[i][j] = 0;
+    }
+
+    // cari posisi untuk blok langkah pemain yang hampir mendapatkan skor
+    public int[] findBlockingMove(int player) {
+        // cek baris
+        for (int i = 0; i < 3; i++) {
+            int countPlayer = 0;
+            int countEmpty = 0;
+            int emptyCol = -1;
+            for (int j = 0; j < 3; j++) {
+                if (data[i][j] == player) countPlayer++;
+                else if (data[i][j] == 0) {
+                    countEmpty++;
+                    emptyCol = j;
+                }
+            }
+            if (countPlayer == 2 && countEmpty == 1) {
+                return new int[]{i, emptyCol};
+            }
+        }
+
+        // cek kolom
+        for (int j = 0; j < 3; j++) {
+            int countPlayer = 0;
+            int countEmpty = 0;
+            int emptyRow = -1;
+            for (int i = 0; i < 3; i++) {
+                if (data[i][j] == player) countPlayer++;
+                else if (data[i][j] == 0) {
+                    countEmpty++;
+                    emptyRow = i;
+                }
+            }
+            if (countPlayer == 2 && countEmpty == 1) {
+                return new int[]{emptyRow, j};
+            }
+        }
+
+        // cek diagonal utama
+        int countPlayer = 0, countEmpty = 0, emptyPos = -1;
+        for (int i = 0; i < 3; i++) {
+            if (data[i][i] == player) countPlayer++;
+            else if (data[i][i] == 0) {
+                countEmpty++;
+                emptyPos = i;
+            }
+        }
+        if (countPlayer == 2 && countEmpty == 1) {
+            return new int[]{emptyPos, emptyPos};
+        }
+
+        // cek diagonal sekunder
+        countPlayer = 0; countEmpty = 0; emptyPos = -1;
+        for (int i = 0; i < 3; i++) {
+            int j = 2 - i;
+            if (data[i][j] == player) countPlayer++;
+            else if (data[i][j] == 0) {
+                countEmpty++;
+                emptyPos = i;
+            }
+        }
+        if (countPlayer == 2 && countEmpty == 1) {
+            return new int[]{emptyPos, 2 - emptyPos};
+        }
+
+        // tidak ada posisi untuk blok
+        return null;
     }
 
 }
