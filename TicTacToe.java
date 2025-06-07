@@ -63,9 +63,16 @@ public class TicTacToe {
                         }
                     } else {
                         // giliran komputer
-                        int brs = rand.nextInt(3);
-                        int kol = rand.nextInt(3);
-                        validMove = board.setBoard(brs, kol);
+                        // cek apakah pemain hampir mendapatkan skor
+                        int[] blockPos = board.findBlockingMove(-1);
+                        if (blockPos != null) {
+                            validMove = board.setBoard(blockPos[0], blockPos[1]);
+                        } else {
+                            // jika tidak ada ancaman, pilih posisi kosong secara acak
+                            int brs = rand.nextInt(3);
+                            int kol = rand.nextInt(3);
+                            validMove = board.setBoard(brs, kol);
+                        }
                     }
                 }
                 board.disp();
